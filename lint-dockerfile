@@ -1,0 +1,15 @@
+#  Menggunakan image latest alpine linux
+FROM alpine:3.18
+
+# Install app dan tool yang dibutuhkan (curl dan hadolint)
+RUN apk --no-cache add curl \
+    && curl -LO https://github.com/hadolint/hadolint/releases/download/v2.3.0/hadolint-Linux-x86_64 \
+    && chmod +x hadolint-Linux-x86_64 \
+    && mv hadolint-Linux-x86_64 /usr/local/bin/hadolint \
+    && apk del curl
+
+# Copy Dockerfile ke dalam kontainer
+COPY Dockerfile /Dockerfile
+
+# Jalankan Hadolint untuk memeriksa Dockerfile
+RUN hadolint /Dockerfile

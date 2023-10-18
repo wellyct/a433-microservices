@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  
+  ## Container item-app (node14, restart on-failure, port80)
+  item-app:
+    # nama dari container item-app
+    container_name: item-app
+    
+    # menggunakan image build dari Dockerfile
+    image: ghcr.io/wellyct/item-app:v1
+
+    # melakukan restart ketika terhentik
+    restart: on-failure
+    
+    # expose port 80/tcp ke luar dari port 8080 container item-app 
+    ports:
+      - 80:8080/tcp
+    # working_dir: /app
+    depends_on: 
+      - item-db
+        #condition: "service_started"
+
+
+  ## Container item-db (mongo3, port 27017, volume app-db)
+  item-db:
+    # nama dari container item-db
+    container_name: item-db
+    
+    # menggunakan image mongodb 3 dari hub docker
+    image: mongo:3
+
+    # expose port yang digunakan, berjalan di port 27017 internal dan external
+    ports:
+      - 27017:27017/tcp
+    
+    # mount volume app-db ke dalam folder /data/db di container item-db
+    volumes:
+      - app-db:/data/db
+
+## buat volume untuk item-db  
+volumes:
+  app-db:
